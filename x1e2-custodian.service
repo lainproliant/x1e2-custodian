@@ -1,0 +1,9 @@
+[Unit]
+description=Custodian for X1E2 power management
+
+[Service]
+ExecStart=/usr/sbin/x1e2-custodian.py
+User=root
+
+[Install]
+WantedBy=multi-user.target
