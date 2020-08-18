@@ -9,9 +9,10 @@
 # --------------------------------------------------------------------
 from pathlib import Path
 
-from panifex import build, default, sh, seq
+from panifex import build, default, sh, target
 from panifex.errors import BuildError
 from panifex.recipes import Recipe, FileRecipe
+
 
 # --------------------------------------------------------------------
 class InstallFile(FileRecipe):
@@ -66,28 +67,37 @@ class InstallFile(FileRecipe):
     def output(self):
         return self.dst
 
+
 # --------------------------------------------------------------------
-@build
-class Custodian:
-    def install_service_file(self):
-        return InstallFile(
-            "x1e2-custodian.service",
-            "/etc/systemd/system/x1e2-custodian.service",
-            chmod=444
-        )
+@target
+def install_service_file():
+    return InstallFile(
+        "x1e2-custodian.service",
+        "/etc/systemd/system/x1e2-custodian.service",
+        chmod=444
+    )
 
-    def install_executable(self, install_service_file):
-        return InstallFile(
-            "x1e2-custodian.py",
-            "/usr/sbin/x1e2-custodian.py",
-            chmod=555
-        )
 
-    @default
-    def enable_service(self, install_executable):
-        if Recipe.cleaning:
-            sh("sudo systemctl stop x1e2-custodian").interactive().sync()
-            sh("sudo systemctl disable x1e2-custodian").interactive().sync()
-        else:
-            sh("sudo systemctl enable x1e2-custodian").interactive().sync()
-            sh("sudo systemctl start x1e2-custodian").interactive().sync()
+# --------------------------------------------------------------------
+@target
+def install_executable(install_service_file):
+    return InstallFile(
+        "x1e2-custodian.py",
+        "/usr/sbin/x1e2-custodian.py",
+        chmod=555
+    )
+
+
+# --------------------------------------------------------------------
+@default
+def enable_service(install_executable):
+    if Recipe.cleaning:
+        sh("sudo systemctl stop x1e2-custodian").interactive().sync()
+        sh("sudo systemctl disable x1e2-custodian").interactive().sync()
+    else:
+        sh("sudo systemctl enable x1e2-custodian").interactive().sync()
+        sh("sudo systemctl start x1e2-custodian").interactive().sync()
+
+
+# --------------------------------------------------------------------
+build()
