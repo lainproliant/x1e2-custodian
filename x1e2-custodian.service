@@ -2,7 +2,7 @@
 description=Custodian for X1E2 power management
 
 [Service]
-ExecStart=/usr/sbin/x1e2-custodian.py
+ExecStart=python -m x1e2_custodian daemon
 User=root
 
 [Install]

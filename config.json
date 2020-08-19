@@ -1,0 +1,12 @@
+{
+    "cooldown_freq": 2000000,
+    "battery_freq": 1500000,
+    "max_freq": 9999999,
+    "hot_threshold": 90,
+    "cool_threshold": 70,
+    "cpu_base_path": "/sys/devices/system/cpu",
+    "cpu_freq_max_path": "cpufreq/scaling_max_freq",
+    "temperature_path": "/sys/class/thermal/thermal_zone0/temp",
+    "ac_status_path": "/sys/class/power_supply/AC/online",
+    "nvidia_battery_kill": false
+}
